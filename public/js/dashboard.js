@@ -34,7 +34,7 @@ function setLoading(isLoading) {
   const loading = document.getElementById('tasksLoading');
   const container = document.getElementById('tasksContainer');
   if (loading) loading.style.display = isLoading ? 'block' : 'none';
-  if (container) container.style.display = isLoading ? 'none' : 'block';
+  if (container) container.style.display = isLoading ? 'none' : '';
 }
 
 function resetTaskForm() {
@@ -72,13 +72,17 @@ function getFilteredTasks() {
 function renderTasks() {
   const container = document.getElementById('tasksContainer');
   const visibleTasks = getFilteredTasks();
+  container.innerHTML = '';
 
   if (!visibleTasks.length) {
-    container.innerHTML = '<div class="col-12"><div class="alert alert-light text-center">No tasks found.</div></div>';
+    const emptyCol = document.createElement('div');
+    emptyCol.className = 'col-12';
+    emptyCol.innerHTML = '<div class="alert alert-light text-center">No tasks found.</div>';
+    container.appendChild(emptyCol);
     return;
   }
 
-  container.innerHTML = visibleTasks.map((task) => {
+  visibleTasks.forEach((task) => {
     const priorityClass = task.priority === 'High' ? 'badge-high' : task.priority === 'Medium' ? 'badge-medium' : 'badge-low';
     const normalizedStatus = task.status.toLowerCase().replace(/\s+/g, '-');
     const statusClass = `badge-status-${normalizedStatus}`;
@@ -86,27 +90,31 @@ function renderTasks() {
       ? statusClass
       : 'badge-status-default';
 
-    return `
-      <div class="col-lg-6">
-        <div class="card task-card border-0 rounded-4 shadow-sm p-3 h-100">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <h5 class="fw-semibold mb-0">${task.title}</h5>
-            <span class="badge ${priorityClass}">${task.priority}</span>
-          </div>
-          <p class="text-muted small mb-3">${task.description || 'No description provided.'}</p>
-          <div class="d-flex justify-content-between text-muted small mb-3">
-            <span><i class="bi bi-calendar-event me-1"></i>${new Date(task.dueDate).toLocaleDateString()}</span>
-            <span class="badge ${statusBadgeClass}">${task.status}</span>
-          </div>
-          <div class="d-flex gap-2 flex-wrap">
-            <button class="btn btn-sm btn-success" data-action="toggle" data-id="${task._id}"><i class="bi bi-check2-circle me-1"></i>${task.status === 'Completed' ? 'Undo' : 'Complete'}</button>
-            <button class="btn btn-sm btn-primary" data-action="edit" data-id="${task._id}"><i class="bi bi-pencil me-1"></i>Edit</button>
-            <button class="btn btn-sm btn-danger" data-action="delete" data-id="${task._id}"><i class="bi bi-trash me-1"></i>Delete</button>
-          </div>
-        </div>
+    const col = document.createElement('div');
+    col.className = 'col-12 col-md-6';
+
+    const card = document.createElement('div');
+    card.className = 'card task-card border-0 rounded-4 shadow-sm p-3 d-flex flex-column h-100';
+    card.innerHTML = `
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h5 class="fw-semibold mb-0">${task.title}</h5>
+        <span class="badge ${priorityClass} rounded-pill px-2 py-1">${task.priority}</span>
+      </div>
+      <p class="text-muted small mb-3">${task.description || 'No description provided.'}</p>
+      <div class="d-flex justify-content-between text-muted small mb-3">
+        <span><i class="bi bi-calendar-event me-1"></i>${new Date(task.dueDate).toLocaleDateString()}</span>
+        <span class="badge ${statusBadgeClass}">${task.status}</span>
+      </div>
+      <div class="d-flex gap-2 flex-wrap mt-auto">
+        <button class="btn btn-sm btn-success" data-action="toggle" data-id="${task._id}"><i class="bi bi-check2-circle me-1"></i>${task.status === 'Completed' ? 'Undo' : 'Complete'}</button>
+        <button class="btn btn-sm btn-primary" data-action="edit" data-id="${task._id}"><i class="bi bi-pencil me-1"></i>Edit</button>
+        <button class="btn btn-sm btn-danger" data-action="delete" data-id="${task._id}"><i class="bi bi-trash me-1"></i>Delete</button>
       </div>
     `;
-  }).join('');
+
+    col.appendChild(card);
+    container.appendChild(col);
+  });
 }
 
 async function fetchWithAuth(url, options = {}) {

@@ -14,12 +14,16 @@
         <a class="navbar-brand fw-bold text-white" href="/">
           <i class="bi bi-kanban-fill me-2"></i>Flowboard
         </a>
-        <div class="ms-auto d-flex align-items-center">
+        <div class="ms-auto d-flex align-items-center gap-2">
+          <a href="/analytics" class="btn btn-sm text-white" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:0.5rem;font-size:0.875rem;" id="analyticsNavLink">
+            <i class="bi bi-bar-chart-line me-1"></i>Analytics
+          </a>
           <button class="btn btn-light logout-btn" id="logoutButton">Logout</button>
         </div>
       </div>
     </nav>
 
+    <main class="page-section">
     <div class="container py-4">
       <div class="row align-items-center mb-4">
         <div class="col-lg-8">
@@ -87,8 +91,9 @@
       <div id="tasksLoading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
       </div>
-      <div id="tasksContainer" class="row g-3"></div>
+      <div id="tasksContainer" class="row g-4"></div>
     </div>
+    </main>
 
     <div class="modal fade" id="taskModal" tabindex="-1">
       <div class="modal-dialog">

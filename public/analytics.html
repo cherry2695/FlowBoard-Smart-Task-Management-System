@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flowboard | Analytics Dashboard</title>
+    <meta name="description" content="Visualize your task statistics with Flowboard's Analytics Dashboard. Track completion rates, priorities, deadlines, and productivity insights." />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body { font-family: 'Inter', 'Segoe UI', sans-serif; }
+    </style>
+  </head>
+  <body class="analytics-page">
+
+    <!-- ── Navbar ────────────────────────────────────────── -->
+    <nav class="navbar navbar-expand-lg navbar-gradient">
+      <div class="container align-items-center">
+        <a class="navbar-brand fw-bold text-white" href="/">
+          <i class="bi bi-kanban-fill me-2"></i>Flowboard
+        </a>
+        <div class="ms-auto d-flex align-items-center gap-2">
+          <a href="/dashboard" class="btn btn-sm text-white" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:0.5rem;font-size:0.875rem;" id="dashboardNavLink">
+            <i class="bi bi-kanban me-1"></i>Dashboard
+          </a>
+          <a href="/analytics" class="btn btn-sm text-white" style="background:rgba(255,255,255,0.30);border:1px solid rgba(255,255,255,0.5);border-radius:0.5rem;font-size:0.875rem;font-weight:600;" id="analyticsNavLink">
+            <i class="bi bi-bar-chart-line me-1"></i>Analytics
+          </a>
+          <button class="btn btn-light logout-btn" id="logoutButton">Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── Main ──────────────────────────────────────────── -->
+    <main class="page-section">
+      <div class="container py-4" id="analyticsContent" style="display:none;">
+
+        <!-- Page Header -->
+        <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+          <div>
+            <h1 class="fw-bold mb-1" style="font-size:1.625rem;color:#3b1e7a;">
+              <i class="bi bi-bar-chart-line-fill me-2" style="color:#8b5cf6;"></i>Analytics Dashboard
+            </h1>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">Real-time insights from your task data</p>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn-export-csv" id="exportCSV">
+              <i class="bi bi-filetype-csv"></i> Export CSV
+            </button>
+            <button class="btn-export-pdf" id="exportPDF">
+              <i class="bi bi-file-earmark-pdf"></i> Export PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="analytics-filter-bar mb-4" id="filterBar">
+          <span style="font-size:0.8rem;font-weight:600;color:#6b7280;white-space:nowrap;"><i class="bi bi-funnel me-1"></i>Period:</span>
+          <button class="filter-btn" data-filter="today" id="btn-today">Today</button>
+          <button class="filter-btn active" data-filter="week" id="btn-week">This Week</button>
+          <button class="filter-btn" data-filter="month" id="btn-month">This Month</button>
+          <button class="filter-btn" data-filter="year" id="btn-year">This Year</button>
+          <button class="filter-btn" data-filter="all" id="btn-all">All Time</button>
+          <button class="filter-btn" data-filter="custom" id="btn-custom">Custom Range</button>
+          <div class="filter-divider"></div>
+          <div id="customDateRange">
+            <span style="font-size:0.8rem;color:#6b7280;">From</span>
+            <input type="date" id="customStart" />
+            <span style="font-size:0.8rem;color:#6b7280;">To</span>
+            <input type="date" id="customEnd" />
+          </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stat-cards-grid mb-4" id="statCardsGrid">
+          <div class="analytics-stat-card accent-purple">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <div class="stat-icon" style="background:rgba(111,66,193,0.12);color:#6f42c1;">
+                <i class="bi bi-list-task"></i>
+              </div>
+              <span style="font-size:0.7rem;font-weight:600;color:#8b5cf6;background:rgba(139,92,246,0.1);padding:0.2rem 0.5rem;border-radius:999px;">TOTAL</span>
+            </div>
+            <div class="stat-number" id="statTotal" style="color:#3b1e7a;">–</div>
+            <div class="stat-label">Total Tasks</div>
+          </div>
+
+          <div class="analytics-stat-card accent-green">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <div class="stat-icon" style="background:rgba(5,150,105,0.12);color:#059669;">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <span style="font-size:0.7rem;font-weight:600;color:#059669;background:rgba(5,150,105,0.1);padding:0.2rem 0.5rem;border-radius:999px;">DONE</span>
+            </div>
+            <div class="stat-number" id="statCompleted" style="color:#059669;">–</div>
+            <div class="stat-label">Completed</div>
+          </div>
+
+          <div class="analytics-stat-card accent-amber">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <div class="stat-icon" style="background:rgba(217,119,6,0.12);color:#d97706;">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <span style="font-size:0.7rem;font-weight:600;color:#d97706;background:rgba(217,119,6,0.1);padding:0.2rem 0.5rem;border-radius:999px;">OPEN</span>
+            </div>
+            <div class="stat-number" id="statPending" style="color:#d97706;">–</div>
+            <div class="stat-label">Pending</div>
+          </div>
+
+          <div class="analytics-stat-card accent-red">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <div class="stat-icon" style="background:rgba(220,38,38,0.12);color:#dc2626;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+              </div>
+              <span style="font-size:0.7rem;font-weight:600;color:#dc2626;background:rgba(220,38,38,0.1);padding:0.2rem 0.5rem;border-radius:999px;">URGENT</span>
+            </div>
+            <div class="stat-number" id="statHighPriority" style="color:#dc2626;">–</div>
+            <div class="stat-label">High Priority</div>
+          </div>
+        </div>
+
+        <!-- Charts Row 1: Doughnut + Bar -->
+        <div class="charts-grid mb-4">
+          <!-- Status Doughnut -->
+          <div class="chart-card">
+            <div class="chart-card-title">
+              <i class="bi bi-pie-chart-fill"></i> Task Status Distribution
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="statusChart" style="max-height:260px;max-width:260px;"></canvas>
+            </div>
+            <div id="statusLegend" class="d-flex justify-content-center gap-3 mt-3 flex-wrap" style="font-size:0.78rem;"></div>
+          </div>
+
+          <!-- Priority Bar -->
+          <div class="chart-card">
+            <div class="chart-card-title">
+              <i class="bi bi-bar-chart-fill"></i> Priority Distribution
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="priorityChart" style="max-height:260px;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row 2: Line + Progress Ring -->
+        <div class="charts-grid mb-4">
+          <!-- Monthly Completion Line -->
+          <div class="chart-card">
+            <div class="chart-card-title">
+              <i class="bi bi-graph-up-arrow"></i> Monthly Task Completion
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="monthlyChart" style="max-height:260px;"></canvas>
+            </div>
+          </div>
+
+          <!-- Completion Rate Ring -->
+          <div class="chart-card">
+            <div class="chart-card-title">
+              <i class="bi bi-bullseye"></i> Completion Rate
+            </div>
+            <div class="progress-ring-wrapper">
+              <div class="progress-ring-container">
+                <svg class="progress-ring-svg" width="180" height="180" viewBox="0 0 180 180">
+                  <defs>
+                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#6f42c1;" />
+                      <stop offset="100%" style="stop-color:#8b5cf6;" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="progress-ring-track" cx="90" cy="90" r="80" />
+                  <circle class="progress-ring-fill" id="progressRingFill" cx="90" cy="90" r="80" />
+                </svg>
+                <div class="progress-ring-text">
+                  <span class="progress-ring-pct" id="progressRingPct">0%</span>
+                  <span class="progress-ring-sublabel">Completion</span>
+                </div>
+              </div>
+              <div class="progress-ring-meta" id="progressRingMeta">
+                <span><strong id="ringCompleted">0</strong> Completed</span>
+                <span><strong id="ringTotal">0</strong> Total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="chart-card mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="chart-card-title mb-0">
+              <i class="bi bi-clock-history"></i> Recent Activity
+              <span style="font-size:0.75rem;font-weight:400;color:#9ca3af;margin-left:0.25rem;">(last completed tasks)</span>
+            </div>
+          </div>
+          <div class="analytics-table-wrapper">
+            <table class="analytics-table">
+              <thead>
+                <tr>
+                  <th>Task Name</th>
+                  <th>Priority</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentActivityBody">
+                <tr><td colspan="4" class="analytics-empty"><i class="bi bi-inbox"></i>No completed tasks yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bottom Grid: Upcoming Deadlines + Insights -->
+        <div class="bottom-grid mb-4">
+          <!-- Upcoming Deadlines -->
+          <div class="chart-card">
+            <div class="chart-card-title">
+              <i class="bi bi-calendar-event-fill"></i> Upcoming Deadlines
+              <span style="font-size:0.75rem;font-weight:400;color:#9ca3af;margin-left:0.25rem;">(next 5 pending)</span>
+            </div>
+            <div class="analytics-table-wrapper">
+              <table class="analytics-table">
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Due Date</th>
+                    <th>Priority</th>
+                  </tr>
+                </thead>
+                <tbody id="upcomingDeadlinesBody">
+                  <tr><td colspan="3" class="analytics-empty"><i class="bi bi-calendar-check"></i>No upcoming tasks.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Productivity Insights -->
+          <div class="insight-card">
+            <div class="chart-card-title mb-3">
+              <i class="bi bi-lightbulb-fill" style="color:#f59e0b;"></i> Productivity Insights
+            </div>
+            <div id="insightsContainer">
+              <div class="analytics-empty"><i class="bi bi-emoji-smile"></i>Loading insights…</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="analytics-loading" id="analyticsLoading">
+        <div class="spinner-border" style="width:2.5rem;height:2.5rem;color:#8b5cf6;" role="status"></div>
+        <span style="font-size:0.9rem;color:#8b5cf6;">Loading your analytics…</span>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center text-muted">
+      <div class="container">
+        <p class="mb-0">Flowboard © 2026 · Stay focused, one task at a time.</p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="/js/analytics.js"></script>
+  </body>
+</html>

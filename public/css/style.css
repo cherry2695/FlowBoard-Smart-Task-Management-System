@@ -187,6 +187,7 @@ body {
   margin-bottom: 2.5rem;
 }
 
+
 .feature-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   background: linear-gradient(180deg, rgba(111, 66, 193, 0.15), rgba(139, 92, 246, 0.08));
@@ -381,3 +382,523 @@ body {
 .footer-purple p {
   color: #ffffff;
 }
+
+/* ─── Task Grid Layout ─────────────────────────────────── */
+#tasksContainer {
+  display: grid !important;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Tablet: 2 columns when space permits (≥576px) */
+@media (min-width: 576px) {
+  #tasksContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Desktop: always 2 equal-width columns (≥1024px) */
+@media (min-width: 1024px) {
+  #tasksContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+/* Each Bootstrap col inside the grid fills the grid cell */
+#tasksContainer > [class*="col"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  /* Stretch so sibling cards in the same row share equal height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Task cards fill their column wrapper and share equal height */
+#tasksContainer .task-card {
+  flex: 1;
+  height: 100%;
+}
+
+/* "No tasks found" empty-state spans both columns */
+#tasksContainer > .col-12:only-child {
+  grid-column: 1 / -1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANALYTICS DASHBOARD STYLES
+═══════════════════════════════════════════════════════════ */
+
+.analytics-page {
+  background: linear-gradient(135deg, #f8f5ff 0%, #efe7ff 100%);
+  min-height: 100vh;
+}
+
+/* ── Stat Cards ──────────────────────────────────────────── */
+.analytics-stat-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(111, 66, 193, 0.10);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(111, 66, 193, 0.09);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.analytics-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.analytics-stat-card.accent-purple::before { background: linear-gradient(90deg, #6f42c1, #8b5cf6); }
+.analytics-stat-card.accent-green::before  { background: linear-gradient(90deg, #059669, #34d399); }
+.analytics-stat-card.accent-amber::before  { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.analytics-stat-card.accent-red::before    { background: linear-gradient(90deg, #dc2626, #f87171); }
+
+.analytics-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(111, 66, 193, 0.16);
+}
+
+.stat-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.875rem;
+  display: grid;
+  place-items: center;
+  font-size: 1.375rem;
+  flex-shrink: 0;
+}
+
+.stat-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Chart Cards ─────────────────────────────────────────── */
+.chart-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(111, 66, 193, 0.09);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(111, 66, 193, 0.07);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #3b1e7a;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.chart-card-title i {
+  color: #8b5cf6;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  flex: 1;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Charts Grid ─────────────────────────────────────────── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Progress Ring ───────────────────────────────────────── */
+.progress-ring-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.progress-ring-svg {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 4px 12px rgba(111, 66, 193, 0.25));
+}
+
+.progress-ring-track {
+  fill: none;
+  stroke: rgba(111, 66, 193, 0.10);
+  stroke-width: 12;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: url(#ringGradient);
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 502.4;
+  stroke-dashoffset: 502.4;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.progress-ring-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.progress-ring-pct {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b1e7a;
+  line-height: 1;
+  display: block;
+}
+
+.progress-ring-sublabel {
+  font-size: 0.6875rem;
+  color: #8b5cf6;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progress-ring-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: 100%;
+  min-height: 220px;
+}
+
+.progress-ring-meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.progress-ring-meta span strong {
+  color: #3b1e7a;
+  font-weight: 700;
+}
+
+/* ── Filter Bar ──────────────────────────────────────────── */
+.analytics-filter-bar {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(111, 66, 193, 0.11);
+  border-radius: 1rem;
+  padding: 0.875rem 1.25rem;
+  box-shadow: 0 2px 12px rgba(111, 66, 193, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.625rem;
+  border: 1px solid rgba(111, 66, 193, 0.22);
+  background: transparent;
+  color: #6f42c1;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  background: rgba(111, 66, 193, 0.07);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(111, 66, 193, 0.35);
+}
+
+.filter-divider {
+  width: 1px;
+  height: 1.5rem;
+  background: rgba(111, 66, 193, 0.18);
+  margin: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+#customDateRange {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#customDateRange input[type="date"] {
+  padding: 0.3rem 0.625rem;
+  border: 1px solid rgba(111, 66, 193, 0.25);
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  color: #3b1e7a;
+  background: rgba(255,255,255,0.8);
+  outline: none;
+  cursor: pointer;
+}
+
+#customDateRange input[type="date"]:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+/* ── Insight Cards ───────────────────────────────────────── */
+.insight-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(111, 66, 193, 0.09);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(111, 66, 193, 0.07);
+  height: 100%;
+}
+
+.insight-chip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  background: rgba(111, 66, 193, 0.05);
+  border: 1px solid rgba(111, 66, 193, 0.09);
+  font-size: 0.8375rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s;
+  line-height: 1.4;
+  color: #374151;
+}
+
+.insight-chip:last-child { margin-bottom: 0; }
+.insight-chip:hover { background: rgba(111, 66, 193, 0.09); }
+.insight-chip .chip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Analytics Tables ────────────────────────────────────── */
+.analytics-table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  flex: 1;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 380px;
+}
+
+.analytics-table th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8b5cf6;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 2px solid rgba(111, 66, 193, 0.10);
+  background: rgba(111, 66, 193, 0.04);
+  white-space: nowrap;
+}
+
+.analytics-table td {
+  padding: 0.75rem 0.875rem;
+  font-size: 0.8375rem;
+  border-bottom: 1px solid rgba(111, 66, 193, 0.06);
+  vertical-align: middle;
+  color: #374151;
+}
+
+.analytics-table tr:last-child td { border-bottom: none; }
+.analytics-table tbody tr:hover td { background: rgba(111, 66, 193, 0.025); }
+
+/* ── Export Buttons ──────────────────────────────────────── */
+.btn-export-pdf {
+  background: linear-gradient(135deg, #6f42c1, #8b5cf6);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.125rem;
+  border-radius: 0.625rem;
+  font-size: 0.8375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.btn-export-csv {
+  background: rgba(255, 255, 255, 0.9);
+  color: #6f42c1;
+  border: 1px solid rgba(111, 66, 193, 0.28);
+  padding: 0.5rem 1.125rem;
+  border-radius: 0.625rem;
+  font-size: 0.8375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.btn-export-pdf:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-export-csv:hover { background: rgba(111, 66, 193, 0.07); }
+
+/* ── Section Headers ─────────────────────────────────────── */
+.analytics-section-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #3b1e7a;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Bottom Grid (Deadlines + Insights) ──────────────────── */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Stat Cards Grid ─────────────────────────────────────── */
+.stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .stat-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Empty State ─────────────────────────────────────────── */
+.analytics-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.analytics-empty i {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+/* ── Priority Badges ─────────────────────────────────────── */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.priority-badge.high   { background: rgba(220,38,38,0.1);  color: #dc2626; }
+.priority-badge.medium { background: rgba(217,119,6,0.1);  color: #d97706; }
+.priority-badge.low    { background: rgba(5,150,105,0.1);  color: #059669; }
+
+/* ── Overdue Badge ───────────────────────────────────────── */
+.overdue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+/* ── Animate-in ──────────────────────────────────────────── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.analytics-stat-card,
+.chart-card,
+.insight-card {
+  animation: fadeSlideIn 0.45s ease both;
+}
+
+.analytics-stat-card:nth-child(1) { animation-delay: 0.05s; }
+.analytics-stat-card:nth-child(2) { animation-delay: 0.10s; }
+.analytics-stat-card:nth-child(3) { animation-delay: 0.15s; }
+.analytics-stat-card:nth-child(4) { animation-delay: 0.20s; }
+
+/* ── Spinner overlay ─────────────────────────────────────── */
+.analytics-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  flex-direction: column;
+  gap: 1rem;
+  color: #8b5cf6;
+}
