@@ -4,8 +4,6 @@
 
 FlowBoard is designed to simplify task management for individuals and teams by providing an easy-to-use platform for creating, organizing and tracking tasks. Users can manage task priorities, update task statuses, set due dates and monitor progress through a responsive dashboard. The application follows the MVC architecture and offers a modern Bootstrap-based user interface for a seamless user experience.
 
----
-
 ## ✨ Features
 
 - ➕ Create new tasks with title, description, priority, due date, and status.
@@ -22,8 +20,6 @@ FlowBoard is designed to simplify task management for individuals and teams by p
 - ⚡ Real-time CRUD operations using MongoDB.
 - 🔔 Toast notifications for task operations.
 - 📱 Fully responsive design for desktop, tablet, and mobile.
-
----
 
 ## 🛠️ Tech Stack
 
